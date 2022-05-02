@@ -2,6 +2,7 @@ package com.emeraldodin.minecraft.pcmod.item;
 
 import com.emeraldodin.minecraft.pcmod.entities.EntityFlatScreen;
 
+import com.emeraldodin.minecraft.pcmod.main.PCMod;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvents;
@@ -20,7 +21,7 @@ public class ItemList {
     }
 
     private static Item registerItem(String id, Item it) {
-        Registry.register(Registry.ITEM, new Identifier("pcmod", id), it);
+        Registry.register(Registry.ITEM, new Identifier(PCMod.MODID, id), it);
         return it;
     }
 }

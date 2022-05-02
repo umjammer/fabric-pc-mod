@@ -14,24 +14,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MouseMixin {
 	@Shadow
 	private double eventDeltaWheel;
-	
+
 	@Shadow
 	private int activeButton;
-	
+
 	@Shadow
 	private boolean leftButtonClicked;
-	
+
 	@Shadow
 	private boolean middleButtonClicked;
-	
+
 	@Shadow
 	private boolean rightButtonClicked;
-	
+
 	@Inject(at = @At("TAIL"), method = "onMouseScroll")
 	private void onMouseScroll(CallbackInfo ci) {
 		PCModClient.mouseDeltaScroll = (int) this.eventDeltaWheel;
 	}
-	
+
 	@Inject(at = @At("TAIL"), method = "onMouseButton")
 	private void onMouseButton(CallbackInfo ci) {
 		PCModClient.leftMouseButton = leftButtonClicked;

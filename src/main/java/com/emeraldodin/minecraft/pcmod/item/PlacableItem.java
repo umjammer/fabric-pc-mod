@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 public class PlacableItem extends Item{
 	private Constructor<? extends Entity> constructor;
 	private SoundEvent placeSound;
-	
+
 	public PlacableItem(Settings settings, Class<? extends Entity> entityPlaced, SoundEvent placeSound) {
 		super(settings);
 		this.placeSound = placeSound;
@@ -30,7 +30,7 @@ public class PlacableItem extends Item{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		if(!world.isClient && hand == Hand.MAIN_HAND) {
@@ -50,7 +50,7 @@ public class PlacableItem extends Item{
 				e.printStackTrace();
 			}
 		}
-		
+
 		if(world.isClient) {
 			world.playSound(PCModClient.thePreviewEntity.getX(),
 							PCModClient.thePreviewEntity.getY(),
@@ -58,8 +58,7 @@ public class PlacableItem extends Item{
 							placeSound,
 							SoundCategory.BLOCKS, 1, 1, true);
 		}
-		
+
 		return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, user.getStackInHand(hand));
 	}
-
 }

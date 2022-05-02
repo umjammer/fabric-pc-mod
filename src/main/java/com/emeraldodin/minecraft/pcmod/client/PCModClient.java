@@ -7,8 +7,9 @@ import com.emeraldodin.minecraft.pcmod.client.utils.VNCControlRunnable;
 import com.emeraldodin.minecraft.pcmod.entities.EntityItemPreview;
 import com.emeraldodin.minecraft.pcmod.entities.EntityList;
 
+import com.emeraldodin.minecraft.pcmod.main.PCMod;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
@@ -18,6 +19,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import static com.emeraldodin.minecraft.pcmod.main.PCMod.logger;
 
 public class PCModClient implements ClientModInitializer {
     public static EntityItemPreview thePreviewEntity;
@@ -46,70 +48,78 @@ public class PCModClient implements ClientModInitializer {
     public static Thread vncUpdateThread;
 
     static {
+        // TODO properties
         if (SystemUtils.IS_OS_MAC) {
-            glfwUnfocusKey1 = GLFW.GLFW_KEY_LEFT_ALT;
-            glfwUnfocusKey2 = GLFW.GLFW_KEY_RIGHT_ALT;
+            logger.info("on mac");
+            glfwUnfocusKey1 = GLFW.GLFW_KEY_LEFT_CONTROL;
+            glfwUnfocusKey2 = GLFW.GLFW_KEY_LEFT_ALT;
+            glfwUnfocusKey3 = GLFW.GLFW_KEY_DELETE;
         } else {
+            logger.info("on windows");
             glfwUnfocusKey1 = GLFW.GLFW_KEY_LEFT_CONTROL;
             glfwUnfocusKey2 = GLFW.GLFW_KEY_RIGHT_CONTROL;
+            glfwUnfocusKey3 = GLFW.GLFW_KEY_BACKSPACE;
         }
-        glfwUnfocusKey3 = GLFW.GLFW_KEY_BACKSPACE;
         glfwUnfocusKey4 = -1;
     }
 
     public static void openPCFocusGUI() {
-        MinecraftClient.getInstance().openScreen(new PCScreenFocus());
+        MinecraftClient.getInstance().setScreen(new PCScreenFocus());
     }
 
     public static String getKeyName(int key) {
         if (key < 0) {
             return "None";
-        }else {
+        } else {
             return glfwKey(key);
         }
     }
 
     private static String glfwKey(int key) {
-        switch(key) {
-            case GLFW.GLFW_KEY_LEFT_CONTROL:
-                return "L Control";
-            case GLFW.GLFW_KEY_RIGHT_CONTROL:
-                return "R Control";
-            case GLFW.GLFW_KEY_RIGHT_ALT:
-                return "R Alt";
-            case GLFW.GLFW_KEY_LEFT_ALT:
-                return "L Alt";
-            case GLFW.GLFW_KEY_LEFT_SHIFT:
-                return "L Shift";
-            case GLFW.GLFW_KEY_RIGHT_SHIFT:
-                return "R Shift";
-            case GLFW.GLFW_KEY_ENTER:
-                return "Enter";
-            case GLFW.GLFW_KEY_BACKSPACE:
-                return "Backspace";
-            case GLFW.GLFW_KEY_CAPS_LOCK:
-                return "Caps Lock";
-            case GLFW.GLFW_KEY_TAB:
-                return "Tab";
-            default:
-                return GLFW.glfwGetKeyName(key, 0);
+        switch (key) {
+        case GLFW.GLFW_KEY_LEFT_CONTROL:
+            return "L Control";
+        case GLFW.GLFW_KEY_RIGHT_CONTROL:
+            return "R Control";
+        case GLFW.GLFW_KEY_RIGHT_ALT:
+            return "R Alt";
+        case GLFW.GLFW_KEY_LEFT_ALT:
+            return "L Alt";
+        case GLFW.GLFW_KEY_LEFT_SHIFT:
+            return "L Shift";
+        case GLFW.GLFW_KEY_RIGHT_SHIFT:
+            return "R Shift";
+        case GLFW.GLFW_KEY_ENTER:
+            return "Enter";
+        case GLFW.GLFW_KEY_ESCAPE:
+            return "Escape";
+        case GLFW.GLFW_KEY_BACKSPACE:
+            return "Backspace";
+        case GLFW.GLFW_KEY_DELETE:
+            return "Delete";
+        case GLFW.GLFW_KEY_CAPS_LOCK:
+            return "Caps Lock";
+        case GLFW.GLFW_KEY_TAB:
+            return "Tab";
+        default:
+            return GLFW.glfwGetKeyName(key, 0);
         }
     }
 
     @Override
     public void onInitializeClient() {
         isOnClient = true;
-        vmScreenTextures = new HashMap<UUID, Identifier>();
+        vmScreenTextures = new HashMap<>();
 
-        EntityRendererRegistry.INSTANCE.register(EntityList.FLATSCREEN,
-                (entityRenderDispatcher, context) -> new FlatScreenRender(entityRenderDispatcher));
+        EntityRendererRegistry.register(EntityList.FLATSCREEN, FlatScreenRender::new);
 
-        EntityRendererRegistry.INSTANCE.register(EntityList.ITEM_PREVIEW,
-                (entityRenderDispatcher, context) -> new ItemPreviewRender(entityRenderDispatcher));
+        EntityRendererRegistry.register(EntityList.ITEM_PREVIEW, ItemPreviewRender::new);
+
+        // vnc
+        new VNCReceiver(PCMod.host, PCMod.port).connect();
 
         vncUpdateThread = new Thread(new VNCControlRunnable(), "VNC Update Thread");
         vncUpdateThread.start();
-        new VNCReceiver("127.0.0.1", 5900).connect();
     }
 
 }

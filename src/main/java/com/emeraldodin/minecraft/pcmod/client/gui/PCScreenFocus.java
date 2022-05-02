@@ -1,31 +1,30 @@
 package com.emeraldodin.minecraft.pcmod.client.gui;
 
-import com.emeraldodin.minecraft.pcmod.client.PCModClient;
+import java.nio.DoubleBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import com.emeraldodin.minecraft.pcmod.client.PCModClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.nio.DoubleBuffer;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class PCScreenFocus extends Screen{
 	private String keyString;
-	private ArrayList<Integer> keys;
+	private List<Integer> keys;
 	private final Language lang = Language.getInstance();
 	private final MinecraftClient minecraft = MinecraftClient.getInstance();
-	
+
 	public PCScreenFocus() {
 		super(new TranslatableText("Focus"));
 	}
-	
+
 	@Override
 	protected void init() {
 		PCModClient.releaseKeys = false;
@@ -38,15 +37,15 @@ public class PCScreenFocus extends Screen{
 										PCModClient.glfwUnfocusKey4};
 
 		keys = new ArrayList<>();
-		for(int key : unfocusKeys) {
-			if(key > 0) {
+		for (int key : unfocusKeys) {
+			if (key > 0) {
 				keys.add(key);
 			}
 		}
 
 		boolean plus = false;
-		for(int key : keys) {
-			if(plus) {
+		for (int key : keys) {
+			if (plus) {
 				keyString += " + ";
 			}
 			keyString += PCModClient.getKeyName(key);
@@ -67,7 +66,7 @@ public class PCScreenFocus extends Screen{
 		}
 		ServerAddress.schedule(new CheckAddress(), 0, 1000);
 	}
-	
+
 	@Override
 	public void render(MatrixStack ms, int wmouseX, int wmouseY, float delta) {
 		long window = minecraft.getWindow().getHandle();
@@ -83,37 +82,37 @@ public class PCScreenFocus extends Screen{
 		PCModClient.leftMouseButton = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
 		PCModClient.middleMouseButton = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS;
 		PCModClient.rightMouseButton = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
-		
+
 		this.textRenderer.draw(ms, lang.get("pcmod.focus.lose").replace("%s", keyString), 4, 4, -1);
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-		
+
 		boolean pressed = true;
-		for(int key : keys) {
+		for (int key : keys) {
 			if(GLFW.glfwGetKey(window, key) == GLFW.GLFW_RELEASE) {
 				pressed = false;
 				break;
 			}
 		}
-		
-		if(pressed) {
-			minecraft.openScreen(null);
+
+		if (pressed) {
+			minecraft.setScreen(null);
 		}
-		
+
 		super.render(ms, wmouseX, wmouseY, delta);
 	}
-	
+
 	@Override
 	public void removed() {
 		PCModClient.releaseKeys = true;
 	}
-	
+
 	@Override
 	public boolean shouldCloseOnEsc() {
 		return false;
 	}
-	
+
 	@Override
-	public boolean isPauseScreen() {
+	public boolean shouldPause() {
 		return false;
 	}
 }

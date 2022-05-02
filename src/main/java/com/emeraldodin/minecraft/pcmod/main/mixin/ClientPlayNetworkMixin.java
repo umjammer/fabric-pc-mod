@@ -24,10 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientPlayNetworkMixin {
 	@Shadow
 	private ClientWorld world;
-	
+
 	@Shadow
 	private MinecraftClient client;
-	
+
 	@Inject(at = @At("TAIL"), method = "onEntitySpawn")
 	public void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci) {
 		EntityType<?> entityType = packet.getEntityTypeId();
@@ -35,43 +35,42 @@ public class ClientPlayNetworkMixin {
 		double e = packet.getY();
 		double f = packet.getZ();
 	    Object entity15 = null;
-	    if (entityType == EntityList.ITEM_PREVIEW) {
-	    	entity15 = new EntityItemPreview(this.world, d, e, f);
-	    }else if (entityType == EntityList.FLATSCREEN) {
+		if (entityType == EntityList.ITEM_PREVIEW) {
+			entity15 = new EntityItemPreview(this.world, d, e, f);
+		} else if (entityType == EntityList.FLATSCREEN) {
 	    	entity15 = new EntityFlatScreen(this.world, d, e, f);
 	    }
-	    
+
 	    if (entity15 != null) {
-	         int i = packet.getId();
-	         ((Entity)entity15).updateTrackedPosition(d, e, f);
-	         ((Entity)entity15).pitch = (float)(packet.getPitch() * 360) / 256.0F;
-	         ((Entity)entity15).yaw = (float)(packet.getYaw() * 360) / 256.0F;
-	         ((Entity)entity15).setEntityId(i);
-	         ((Entity)entity15).setUuid(packet.getUuid());
-	         this.world.addEntity(i, (Entity)entity15);
-	      }
+			int i = packet.getId();
+			((Entity) entity15).updateTrackedPosition(d, e, f);
+			((Entity) entity15).setPitch((float) (packet.getPitch() * 360) / 256.0F);
+			((Entity) entity15).setYaw((float) (packet.getYaw() * 360) / 256.0F);
+			((Entity) entity15).setId(i);
+			((Entity) entity15).setUuid(packet.getUuid());
+			this.world.addEntity(i, (Entity) entity15);
+		}
 	}
-	
+
 	public void onEntityPosition(EntityPositionS2CPacket packet) {
-	      NetworkThreadUtils.forceMainThread(packet, this.client.getNetworkHandler(), (ThreadExecutor<?>)this.client);
-	      Entity entity = this.world.getEntityById(packet.getId());
-	      if (entity != null) {
-	         double d = packet.getX();
-	         double e = packet.getY();
-	         double f = packet.getZ();
-	         entity.updateTrackedPosition(d, e, f);
-	         if (!entity.isLogicalSideForUpdatingMovement()) {
-	            float g = (float)(packet.getYaw() * 360) / 256.0F;
-	            float h = (float)(packet.getPitch() * 360) / 256.0F;
-	            if (Math.abs(entity.getX() - d) < 0.03125D && Math.abs(entity.getY() - e) < 0.015625D && Math.abs(entity.getZ() - f) < 0.03125D) {
-	               entity.updateTrackedPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), g, h, 3, true);
-	            } else {
-	               entity.updateTrackedPositionAndAngles(d, e, f, g, h, 3, true);
-	            }
+		NetworkThreadUtils.forceMainThread(packet, this.client.getNetworkHandler(), (ThreadExecutor<?>) this.client);
+		Entity entity = this.world.getEntityById(packet.getId());
+		if (entity != null) {
+			double d = packet.getX();
+			double e = packet.getY();
+			double f = packet.getZ();
+			entity.updateTrackedPosition(d, e, f);
+			if (!entity.isLogicalSideForUpdatingMovement()) {
+				float g = (float) (packet.getYaw() * 360) / 256.0F;
+				float h = (float) (packet.getPitch() * 360) / 256.0F;
+				if (Math.abs(entity.getX() - d) < 0.03125D && Math.abs(entity.getY() - e) < 0.015625D && Math.abs(entity.getZ() - f) < 0.03125D) {
+					entity.updateTrackedPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), g, h, 3, true);
+				} else {
+					entity.updateTrackedPositionAndAngles(d, e, f, g, h, 3, true);
+				}
 
-	            entity.setOnGround(packet.isOnGround());
-	         }
-
-	      }
-	   }
+				entity.setOnGround(packet.isOnGround());
+			}
+		}
+	}
 }

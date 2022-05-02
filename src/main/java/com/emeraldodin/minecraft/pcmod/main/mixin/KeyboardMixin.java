@@ -83,7 +83,7 @@ public class KeyboardMixin {
             if (mcc.currentScreen instanceof PCScreenFocus) {
                 if (action != 2) {
                     boolean pressed = action == 1;
-                    if(key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+                    if (key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) {
                         isCtrlPressed = pressed;
                     }
                     keyCheckAndPress(key, GLFW.GLFW_KEY_BACKSPACE, KeyEvent.VK_BACK_SPACE, pressed);
@@ -100,8 +100,7 @@ public class KeyboardMixin {
                 try {
                     System.out.println("onChar: " + key);
                     VNCReceiver.current.client.type(key);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

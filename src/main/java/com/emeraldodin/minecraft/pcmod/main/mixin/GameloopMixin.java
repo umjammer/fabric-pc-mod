@@ -56,7 +56,7 @@ public class GameloopMixin {
                                 thePreviewEntity.setItem(is);
                                 if (crosshairTarget != null) {
                                     Vec3d hit = crosshairTarget.getPos();
-                                    thePreviewEntity.updatePosition(hit.x, hit.y, hit.z);
+                                    thePreviewEntity.setPosition(hit.x, hit.y, hit.z);
                                 } else {
                                     break;
                                 }
