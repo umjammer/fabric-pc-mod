@@ -23,7 +23,7 @@ public class VNCReceiver {
     private String host;
     private int port;
 
-    private int width = 320, height = 320;
+    private int width = 800, height = 800;
 
     public BufferedImage image;
     private Graphics g;
@@ -33,8 +33,6 @@ public class VNCReceiver {
     private NativeImage ni;
     private NativeImageBackedTexture lastNIBT;
 
-    public static VNCReceiver current;
-
     public VernacularClient client;
 
     private int connectionTrial = 0;
@@ -42,7 +40,6 @@ public class VNCReceiver {
     public VNCReceiver(String host, int port) {
         this.host = host;
         this.port = port;
-        this.current = this;
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.colorModel = image.getColorModel();
         this.raster = image.getRaster();
@@ -104,10 +101,11 @@ logger.info("image: " + width + ", " + height);
             }
         });
 
-        while (retry < 3) {
+        while (retry < 10) {
             try {
+                logger.info("vnc try to connect: " + retry);
                 client.start(host, port);
-logger.info("vnc started : " + retry);
+                logger.info("vnc started : " + retry);
                 break;
             } catch (IllegalArgumentException e) {
                 logger.info("error: " + e);

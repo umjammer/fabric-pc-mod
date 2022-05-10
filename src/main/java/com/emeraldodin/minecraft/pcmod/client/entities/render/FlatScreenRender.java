@@ -1,16 +1,14 @@
 package com.emeraldodin.minecraft.pcmod.client.entities.render;
 
+import java.util.UUID;
+
 import com.emeraldodin.minecraft.pcmod.Utils;
 import com.emeraldodin.minecraft.pcmod.client.PCModClient;
-import com.emeraldodin.minecraft.pcmod.entities.EntityFlatScreen;
+import com.emeraldodin.minecraft.pcmod.entities.FlatScreenEntity;
 import com.emeraldodin.minecraft.pcmod.item.ItemList;
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -22,28 +20,26 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 
-import java.util.UUID;
-
-public class FlatScreenRender extends EntityRenderer<EntityFlatScreen>{
+public class FlatScreenRender extends EntityRenderer<FlatScreenEntity> {
 
 	public FlatScreenRender(EntityRendererFactory.Context ctx) {
 		super(ctx);
 	}
 
 	@Override
-	public Identifier getTexture(EntityFlatScreen entity) {
+	public Identifier getTexture(FlatScreenEntity entity) {
 		return null;
 	}
 
 	@Override
-	public void render(EntityFlatScreen entity, float yaw, float tickDelta, MatrixStack matrices,
-					   VertexConsumerProvider vertexConsumers, int light) {
+	public void render(FlatScreenEntity entity, float yaw, float tickDelta, MatrixStack matrices,
+                       VertexConsumerProvider vertexConsumers, int light) {
 		matrices.push();
 		matrices.translate(0, 0.5, 0);
 		Quaternion look = Utils.lookAt(entity.getPos(), entity.getLookAtPos());
 		matrices.multiply(look);
 		MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ItemList.ITEM_FLATSCREEN), Mode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, 0);
-		if(PCModClient.vmScreenTextures.containsKey(UUID.fromString(entity.getOwnerUUID()))) {
+		if (PCModClient.vmScreenTextures.containsKey(UUID.fromString(entity.getOwnerUUID()))) {
 			matrices.push();
 			matrices.scale(0.006f, 0.006f, 0.006f);
 			matrices.multiply(new Quaternion(0f, 0f, 0f, true));

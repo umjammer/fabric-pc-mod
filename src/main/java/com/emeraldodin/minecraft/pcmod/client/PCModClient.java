@@ -1,28 +1,26 @@
 package com.emeraldodin.minecraft.pcmod.client;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import com.emeraldodin.minecraft.pcmod.client.entities.render.FlatScreenRender;
 import com.emeraldodin.minecraft.pcmod.client.entities.render.ItemPreviewRender;
-import com.emeraldodin.minecraft.pcmod.client.gui.PCScreenFocus;
-import com.emeraldodin.minecraft.pcmod.client.utils.VNCControlRunnable;
-import com.emeraldodin.minecraft.pcmod.entities.EntityItemPreview;
+import com.emeraldodin.minecraft.pcmod.client.gui.FocusPCScreen;
+import com.emeraldodin.minecraft.pcmod.entities.ItemPreviewEntity;
 import com.emeraldodin.minecraft.pcmod.entities.EntityList;
-
 import com.emeraldodin.minecraft.pcmod.main.PCMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import static com.emeraldodin.minecraft.pcmod.main.PCMod.logger;
 
 public class PCModClient implements ClientModInitializer {
-    public static EntityItemPreview thePreviewEntity;
+    public static ItemPreviewEntity thePreviewEntity;
     public static Map<UUID, Identifier> vmScreenTextures;
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -45,7 +43,7 @@ public class PCModClient implements ClientModInitializer {
     public static boolean rightMouseButton;
     public static boolean isOnClient = false;
 
-    public static Thread vncUpdateThread;
+    public static VNCReceiver vnc;
 
     static {
         // TODO properties
@@ -64,7 +62,7 @@ public class PCModClient implements ClientModInitializer {
     }
 
     public static void openPCFocusGUI() {
-        MinecraftClient.getInstance().setScreen(new PCScreenFocus());
+        MinecraftClient.getInstance().setScreen(new FocusPCScreen());
     }
 
     public static String getKeyName(int key) {
@@ -116,10 +114,9 @@ public class PCModClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityList.ITEM_PREVIEW, ItemPreviewRender::new);
 
         // vnc
-        new VNCReceiver(PCMod.host, PCMod.port).connect();
-
-        vncUpdateThread = new Thread(new VNCControlRunnable(), "VNC Update Thread");
-        vncUpdateThread.start();
+        logger.info("vnc start connecting");
+        vnc = new VNCReceiver(PCMod.host, PCMod.port);
+        vnc.connect();
+        logger.info("vnc connected: " + vnc.client.isRunning());
     }
-
 }

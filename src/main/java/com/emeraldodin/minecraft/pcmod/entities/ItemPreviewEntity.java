@@ -14,21 +14,21 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.World;
 
-public class EntityItemPreview extends Entity {
+public class ItemPreviewEntity extends Entity {
     private static final TrackedData<ItemStack> PREVIEWED_STACK =
-            DataTracker.registerData(EntityItemPreview.class, TrackedDataHandlerRegistry.ITEM_STACK);
+            DataTracker.registerData(ItemPreviewEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
 
-    public EntityItemPreview(EntityType<?> type, World world) {
+    public ItemPreviewEntity(EntityType<?> type, World world) {
         super(type, world);
     }
 
-    public EntityItemPreview(World world, double x, double y, double z, ItemStack stack) {
+    public ItemPreviewEntity(World world, double x, double y, double z, ItemStack stack) {
         this(EntityList.ITEM_PREVIEW, world);
         this.setPosition(x, y, z);
         this.getDataTracker().set(PREVIEWED_STACK, stack);
     }
 
-    public EntityItemPreview(World world, double x, double y, double z) {
+    public ItemPreviewEntity(World world, double x, double y, double z) {
         this(EntityList.ITEM_PREVIEW, world);
         this.setPosition(x, y, z);
     }
@@ -73,5 +73,4 @@ public class EntityItemPreview extends Entity {
     public Packet<?> createSpawnPacket() {
         return new EntitySpawnS2CPacket(this);
     }
-
 }

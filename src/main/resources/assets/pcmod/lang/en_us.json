@@ -1,3 +1,5 @@
 {
+  "item.pcmod.flatscreen": "VNC Flat Screen",
+
   "pcmod.focus.lose": "unfocus [%s]"
 }

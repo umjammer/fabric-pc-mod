@@ -7,9 +7,13 @@ import java.util.Properties;
 
 import com.emeraldodin.minecraft.pcmod.entities.EntityList;
 import com.emeraldodin.minecraft.pcmod.item.ItemList;
-
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,5 +58,15 @@ logger.info("host: " + host + ", port: " + port + ", username: " + username);
 	// vnc properties
 	public static String getPassword() {
 		return password;
+	}
+
+	// fabric utility
+	public static PacketByteBuf newPacketByteBuf() {
+		return PacketByteBufs.create();
+	}
+
+	// fabric utility
+	public static Packet<?> newPacket(Identifier id, PacketByteBuf buf) {
+		return ServerPlayNetworking.createS2CPacket(id, buf);
 	}
 }

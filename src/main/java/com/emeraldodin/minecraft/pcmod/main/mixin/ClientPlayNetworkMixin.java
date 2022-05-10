@@ -1,7 +1,7 @@
 package com.emeraldodin.minecraft.pcmod.main.mixin;
 
-import com.emeraldodin.minecraft.pcmod.entities.EntityFlatScreen;
-import com.emeraldodin.minecraft.pcmod.entities.EntityItemPreview;
+import com.emeraldodin.minecraft.pcmod.entities.FlatScreenEntity;
+import com.emeraldodin.minecraft.pcmod.entities.ItemPreviewEntity;
 import com.emeraldodin.minecraft.pcmod.entities.EntityList;
 
 import net.minecraft.client.MinecraftClient;
@@ -14,6 +14,7 @@ import net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.thread.ThreadExecutor;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,6 +26,7 @@ public class ClientPlayNetworkMixin {
 	@Shadow
 	private ClientWorld world;
 
+	@Final
 	@Shadow
 	private MinecraftClient client;
 
@@ -34,21 +36,21 @@ public class ClientPlayNetworkMixin {
 		double d = packet.getX();
 		double e = packet.getY();
 		double f = packet.getZ();
-	    Object entity15 = null;
+	    Entity entity = null;
 		if (entityType == EntityList.ITEM_PREVIEW) {
-			entity15 = new EntityItemPreview(this.world, d, e, f);
+			entity = new ItemPreviewEntity(this.world, d, e, f);
 		} else if (entityType == EntityList.FLATSCREEN) {
-	    	entity15 = new EntityFlatScreen(this.world, d, e, f);
+	    	entity = new FlatScreenEntity(this.world, d, e, f);
 	    }
 
-	    if (entity15 != null) {
+	    if (entity != null) {
 			int i = packet.getId();
-			((Entity) entity15).updateTrackedPosition(d, e, f);
-			((Entity) entity15).setPitch((float) (packet.getPitch() * 360) / 256.0F);
-			((Entity) entity15).setYaw((float) (packet.getYaw() * 360) / 256.0F);
-			((Entity) entity15).setId(i);
-			((Entity) entity15).setUuid(packet.getUuid());
-			this.world.addEntity(i, (Entity) entity15);
+			entity.updateTrackedPosition(d, e, f);
+			entity.setPitch((float) (packet.getPitch() * 360) / 256.0F);
+			entity.setYaw((float) (packet.getYaw() * 360) / 256.0F);
+			entity.setId(i);
+			entity.setUuid(packet.getUuid());
+			this.world.addEntity(i, entity);
 		}
 	}
 

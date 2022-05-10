@@ -4,6 +4,7 @@ import com.emeraldodin.minecraft.pcmod.client.PCModClient;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -16,24 +17,18 @@ import net.minecraft.world.World;
 
 import java.lang.reflect.Constructor;
 
-public class PlacableOrderableItem extends OrderableItem {
+public class FlatScreenItem extends Item {
     private Constructor<? extends Entity> constructor;
     private SoundEvent placeSound;
-    public final boolean wallTV;
 
-    public PlacableOrderableItem(Settings settings, Class<? extends Entity> entityPlaced, SoundEvent placeSound, int price, boolean wallTV) {
-        super(settings, price);
-        this.wallTV = wallTV;
+    public FlatScreenItem(Settings settings, Class<? extends Entity> entityPlaced, SoundEvent placeSound) {
+        super(settings);
         this.placeSound = placeSound;
         try {
             constructor = entityPlaced.getConstructor(World.class, Double.class, Double.class, Double.class, Vec3d.class, String.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public PlacableOrderableItem(Settings settings, Class<? extends Entity> entityPlaced, SoundEvent placeSound, int price) {
-        this(settings, entityPlaced, placeSound, price, false);
     }
 
     @Override
@@ -64,6 +59,6 @@ public class PlacableOrderableItem extends OrderableItem {
                     SoundCategory.BLOCKS, 1, 1, true);
         }
 
-        return new TypedActionResult<ItemStack>(ActionResult.SUCCESS, user.getStackInHand(hand));
+        return new TypedActionResult<>(ActionResult.SUCCESS, user.getStackInHand(hand));
     }
 }

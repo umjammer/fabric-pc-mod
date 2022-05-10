@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.emeraldodin.minecraft.pcmod.client.PCModClient;
+import com.emeraldodin.minecraft.pcmod.client.utils.VNCControlRunnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,13 +16,13 @@ import net.minecraft.util.Language;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
-public class PCScreenFocus extends Screen{
+public class FocusPCScreen extends Screen {
 	private String keyString;
 	private List<Integer> keys;
 	private final Language lang = Language.getInstance();
 	private final MinecraftClient minecraft = MinecraftClient.getInstance();
 
-	public PCScreenFocus() {
+	public FocusPCScreen() {
 		super(new TranslatableText("Focus"));
 	}
 
@@ -99,6 +100,11 @@ public class PCScreenFocus extends Screen{
 		}
 
 		super.render(ms, wmouseX, wmouseY, delta);
+	}
+
+	@Override
+	public void tick() {
+		VNCControlRunnable.tick(minecraft);
 	}
 
 	@Override

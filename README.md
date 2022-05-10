@@ -1,3 +1,6 @@
+[![Fabric](https://img.shields.io/badge/Mod_Loader-Fabric-blue)](https://fabricmc.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.18.2-green)](https://www.minecraft.net/)
+
 # Remote PC Mod. Run Any OS inside Minecraft!
 
 ![Screenshot](pre-pro/screenshot.png)
@@ -32,6 +35,8 @@ Huge shoutout to the devs at [MCVmComputers](https://github.com/Delta2Force/MCVm
 
 ## TODO
 
- * keyboard, mouse doesn't work well
+ * ~~keyboard, mouse doesn't work well~~
+   * keyboard: return key doesn't work
+   * mouse: not smooth, untraceable cursor movement
  * make un-focus keys properties
  * make color depth a property

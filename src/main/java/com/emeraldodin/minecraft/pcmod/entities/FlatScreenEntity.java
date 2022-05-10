@@ -1,6 +1,7 @@
 package com.emeraldodin.minecraft.pcmod.entities;
 
 import com.emeraldodin.minecraft.pcmod.client.PCModClient;
+import com.emeraldodin.minecraft.pcmod.client.utils.VNCControlRunnable;
 import com.emeraldodin.minecraft.pcmod.item.ItemList;
 
 import net.minecraft.entity.Entity;
@@ -19,27 +20,27 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityFlatScreen extends Entity {
+public class FlatScreenEntity extends Entity {
     private static final TrackedData<Float> LOOK_AT_POS_X =
-            DataTracker.registerData(EntityFlatScreen.class, TrackedDataHandlerRegistry.FLOAT);
+            DataTracker.registerData(FlatScreenEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> LOOK_AT_POS_Y =
-            DataTracker.registerData(EntityFlatScreen.class, TrackedDataHandlerRegistry.FLOAT);
+            DataTracker.registerData(FlatScreenEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> LOOK_AT_POS_Z =
-            DataTracker.registerData(EntityFlatScreen.class, TrackedDataHandlerRegistry.FLOAT);
+            DataTracker.registerData(FlatScreenEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     private static final TrackedData<String> OWNER_UUID =
-            DataTracker.registerData(EntityFlatScreen.class, TrackedDataHandlerRegistry.STRING);
+            DataTracker.registerData(FlatScreenEntity.class, TrackedDataHandlerRegistry.STRING);
 
-    public EntityFlatScreen(EntityType<? extends Entity> type, World world) {
+    public FlatScreenEntity(EntityType<? extends Entity> type, World world) {
         super(type, world);
     }
 
-    public EntityFlatScreen(World world, double x, double y, double z) {
+    public FlatScreenEntity(World world, double x, double y, double z) {
         this(EntityList.FLATSCREEN, world);
         this.setPosition(x, y, z);
     }
 
-    public EntityFlatScreen(World world, Double x, Double y, Double z, Vec3d lookAt, String uuid) {
+    public FlatScreenEntity(World world, Double x, Double y, Double z, Vec3d lookAt, String uuid) {
         this(EntityList.FLATSCREEN, world);
         this.setPosition(x, y, z);
         this.getDataTracker().set(LOOK_AT_POS_X, (float) lookAt.x);

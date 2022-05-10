@@ -1,7 +1,7 @@
 package com.emeraldodin.minecraft.pcmod.client.entities.render;
 
 import com.emeraldodin.minecraft.pcmod.Utils;
-import com.emeraldodin.minecraft.pcmod.entities.EntityItemPreview;
+import com.emeraldodin.minecraft.pcmod.entities.ItemPreviewEntity;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -13,19 +13,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
-public class ItemPreviewRender extends EntityRenderer<EntityItemPreview>{
+public class ItemPreviewRender extends EntityRenderer<ItemPreviewEntity>{
 	public ItemPreviewRender(EntityRendererFactory.Context ctx) {
 		super(ctx);
 	}
 
 	@Override
-	public Identifier getTexture(EntityItemPreview entity) {
+	public Identifier getTexture(ItemPreviewEntity entity) {
 		return null;
 	}
 
 	@Override
-	public void render(EntityItemPreview entity, float yaw, float tickDelta, MatrixStack matrices,
-			VertexConsumerProvider vertexConsumers, int light) {
+	public void render(ItemPreviewEntity entity, float yaw, float tickDelta, MatrixStack matrices,
+                       VertexConsumerProvider vertexConsumers, int light) {
 		MinecraftClient mcc = MinecraftClient.getInstance();
 		matrices.push();
 
